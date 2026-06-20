@@ -1,17 +1,12 @@
-node_modules/
-.env
-dist/
-build/
-__pycache__/
-chroma_db/
-*.pdf
-
-# Python Environment
+# Ignore the Python environment inside the backend folder
 backend/venv/
+
+# Ignore Python cache files everywhere
 **/__pycache__/
 *.pyc
 
 # Ignore the database inside the backend folder
 backend/vectorstore/
-# OS Files
-.DS_Store
+
+# Ignore environment variables
+.env
