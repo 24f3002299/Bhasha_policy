@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BhashaPolicy — AI Insurance Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ───────────── HEADER ───────────── -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">Bhasha<span>Policy</span></div>
+      <nav class="nav">
+        <a href="#upload-section" class="nav-link">Upload</a>
+        <a href="#chat-section" class="nav-link">Chat</a>
+        <a href="#evidence-section" class="nav-link">Evidence</a>
+        <a href="#compare-section" class="nav-link">Compare</a>
+        <a href="#" class="nav-link">About</a>
+      </nav>
+      <button class="nav-cta" onclick="document.getElementById('upload-section').scrollIntoView({behavior:'smooth'})">
+        Get Started
+      </button>
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#upload-section" class="mobile-nav-link">Upload</a>
+    <a href="#chat-section" class="mobile-nav-link">Chat</a>
+    <a href="#evidence-section" class="mobile-nav-link">Evidence</a>
+    <a href="#compare-section" class="mobile-nav-link">Compare</a>
+    <a href="#" class="mobile-nav-link">About</a>
+  </div>
+
+  <!-- ───────────── HERO ───────────── -->
+  <section class="hero">
+    <div class="hero-bg-glow"></div>
+    <div class="hero-inner">
+      <div class="hero-text">
+        <span class="eyebrow">AI Insurance Assistant</span>
+        <h1 class="hero-title">Understand your policy<br>in <em>plain language</em></h1>
+        <p class="hero-sub">
+          Upload any insurance PDF and get instant AI-generated summaries,
+          key clause extraction, exclusion alerts, and plain-language
+          explanations — in seconds.
+        </p>
+        <div class="trust-row">
+          <div class="trust-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Secure upload
+          </div>
+          <div class="trust-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Results in 30 seconds
+          </div>
+          <div class="trust-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            Regional languages soon
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload Card -->
+      <div class="upload-card" id="upload-section">
+        <div class="upload-card-header">
+          <div class="upload-card-title">Upload your policy PDF</div>
+          <div class="upload-card-sub">All major insurers supported · Processed securely</div>
+        </div>
+        <div class="drop-zone" id="dropZone" role="button" tabindex="0" aria-label="Upload PDF area">
+          <div class="drop-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#800046" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <p class="drop-label">
+            Drag &amp; drop 1–2 PDFs here<br>
+            or <button class="browse-btn" id="browseBtn">browse from your device</button>
+          </p>
+          <p class="file-name" id="fileName"></p>
+          <input type="file" id="fileInput" accept=".pdf" multiple aria-label="Select up to two PDF files">
+        </div>
+        <p class="api-status" id="apiStatusMsg" style="display:none;"></p>
+        <button class="analyze-btn" id="analyzeBtn">Analyse Policy</button>
+        <div class="upload-features">
+          <div class="upload-feature">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#800046" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            LIC, HDFC, Star, ICICI & more
+          </div>
+          <div class="upload-feature">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#800046" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Never stored on our servers
+          </div>
+          <div class="upload-feature">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#800046" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Up to 50 pages supported
+          </div>
+          <div class="upload-feature">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#800046" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Upload 1 or 2 policies at once
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── PROBLEMS ───────────── -->
+  <section class="problems-section">
+    <div class="container">
+      <div class="section-label">Why BhashaPolicy</div>
+      <h2 class="section-title">Problems we solve</h2>
+      <p class="section-sub">Insurance documents are written for lawyers, not policyholders.</p>
+      <div class="prob-grid">
+        <div class="prob-card">
+          <div class="prob-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#800046" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <h3 class="prob-title">Complex documents</h3>
+          <p class="prob-text">Dense jargon-heavy policies most people never fully read or understand.</p>
+        </div>
+        <div class="prob-card">
+          <div class="prob-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#800046" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <h3 class="prob-title">Language barriers</h3>
+          <p class="prob-text">Millions blocked from understanding their own coverage due to language gaps.</p>
+        </div>
+        <div class="prob-card">
+          <div class="prob-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#800046" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <h3 class="prob-title">Hidden exclusions</h3>
+          <p class="prob-text">Critical exclusion clauses buried deep in fine print you'd never notice.</p>
+        </div>
+        <div class="prob-card">
+          <div class="prob-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#800046" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <h3 class="prob-title">Slow manual review</h3>
+          <p class="prob-text">Manual review takes hours or days — claims and decisions can't wait.</p>
+        </div>
+        <div class="prob-card">
+          <div class="prob-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#800046" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3 class="prob-title">No expert on demand</h3>
+          <p class="prob-text">No instant expert available to answer your policy questions when you need them.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── HOW IT WORKS ───────────── -->
+  <section class="how-section">
+    <div class="container">
+      <div class="section-label">The process</div>
+      <h2 class="section-title">How it works</h2>
+      <p class="section-sub">Three steps from confusion to clarity.</p>
+      <div class="steps-row">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <h3 class="step-title">Upload your policy</h3>
+          <p class="step-desc">Drag in your PDF from any insurer — LIC, Star Health, HDFC, ICICI, and more.</p>
+        </div>
+        <div class="step-connector" aria-hidden="true"></div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <h3 class="step-title">AI reads it</h3>
+          <p class="step-desc">Our model extracts clauses, coverage terms, exclusions, limits, and key dates.</p>
+        </div>
+        <div class="step-connector" aria-hidden="true"></div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <h3 class="step-title">Get insights</h3>
+          <p class="step-desc">Receive a plain-language summary, flagged risks, and a clause-by-clause breakdown.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── CHAT SECTION ───────────── -->
+  <section class="chat-section" id="chat-section">
+    <div class="container">
+      <div class="section-label">Chat with your policy</div>
+      <h2 class="section-title">Ask anything, get answers</h2>
+      <p class="section-sub">Every answer is pinned to the exact clause it came from.</p>
+
+      <div class="summary-card" id="summaryCard" style="display:none;">
+        <div class="summary-card-top">
+          <span class="summary-badge badge-health" id="summaryBadge">Health</span>
+          <div>
+            <div class="summary-title" id="summaryTitle">Policy name</div>
+            <div class="summary-meta" id="summaryMeta">— pages · Insurer</div>
+          </div>
+        </div>
+        <p class="summary-text" id="summaryText">Summary will appear here after analysis.</p>
+        <div class="summary-stats" id="summaryStats"></div>
+      </div>
+
+      <div class="chat-layout">
+        <!-- Sidebar -->
+        <aside class="chat-sidebar">
+          <div class="sidebar-label">Your policies</div>
+          <div id="docCardList">
+            <div class="doc-card active" data-policy="star" tabindex="0" role="button" aria-pressed="true">
+              <div class="doc-name">Star Health — Family</div>
+              <div class="doc-meta">Uploaded today · 14 pages</div>
+              <span class="doc-badge badge-health">Health</span>
+            </div>
+            <div class="doc-card" data-policy="lic" tabindex="0" role="button" aria-pressed="false">
+              <div class="doc-name">LIC Jeevan Anand</div>
+              <div class="doc-meta">Jun 12 · 22 pages</div>
+              <span class="doc-badge badge-term">Term Life</span>
+            </div>
+            <div class="doc-card" data-policy="icici" tabindex="0" role="button" aria-pressed="false">
+              <div class="doc-name">ICICI Lombard Motor</div>
+              <div class="doc-meta">May 30 · 9 pages</div>
+              <span class="doc-badge badge-motor">Motor</span>
+            </div>
+          </div>
+          <button class="upload-more-btn" onclick="document.getElementById('upload-section').scrollIntoView({behavior:'smooth'})">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Upload another policy
+          </button>
+        </aside>
+
+        <!-- Chat Window -->
+        <div class="chat-window">
+          <div class="chat-topbar">
+            <div class="chat-doc-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#800046" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <div>
+              <div class="chat-doc-name" id="chatDocName">Star Health — Family Floater</div>
+              <div class="chat-doc-sub">Ask anything about this policy</div>
+            </div>
+          </div>
+
+          <div class="chat-messages" id="chatMessages" aria-live="polite" aria-label="Chat messages">
+            <div class="msg msg-bot">
+              Hi! I've read your <strong>Star Health Family Floater</strong> policy. Ask me anything — coverage limits, exclusions, claim process, waiting periods.
+            </div>
+            <div class="msg msg-user">What is my room rent limit?</div>
+            <div class="msg msg-bot">
+              Your plan covers room rent up to <strong>1% of sum insured per day</strong>. For your ₹5L cover that's <strong>₹5,000/day</strong>. ICU is capped at 2% (₹10,000/day).
+              <div class="msg-source">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Clause 4.2, Page 7
+              </div>
+            </div>
+          </div>
+
+          <div class="quick-chips" id="quickChips">
+            <button class="chip" data-q="What is not covered?">What is not covered?</button>
+            <button class="chip" data-q="How do I file a claim?">How do I file a claim?</button>
+            <button class="chip" data-q="What is the no-claim bonus?">No-claim bonus?</button>
+            <button class="chip" data-q="Are pre-existing diseases covered?">Pre-existing diseases?</button>
+          </div>
+
+          <div class="chat-input-row">
+            <input
+              type="text"
+              id="chatInput"
+              class="chat-input"
+              placeholder="Ask about your policy…"
+              autocomplete="off"
+            >
+            <button class="send-btn" id="sendBtn" aria-label="Send message">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── EVIDENCE CARDS ───────────── -->
+  <section class="evidence-section" id="evidence-section">
+    <div class="container">
+      <div class="section-label">Clause extraction</div>
+      <h2 class="section-title">Evidence cards</h2>
+      <p class="section-sub">Every insight pinned to the exact source clause in your document.</p>
+
+      <div class="ev-filters" role="group" aria-label="Filter evidence cards">
+        <button class="ev-filter active" data-filter="all">All</button>
+        <button class="ev-filter" data-filter="covered">Covered</button>
+        <button class="ev-filter" data-filter="excluded">Excluded</button>
+        <button class="ev-filter" data-filter="limit">Limits</button>
+        <button class="ev-filter" data-filter="condition">Conditions</button>
+      </div>
+
+      <div class="ev-grid" id="evGrid">
+
+        <article class="ev-card" data-type="covered">
+          <div class="ev-card-top">
+            <span class="ev-tag tag-covered">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Covered
+            </span>
+            <h3 class="ev-clause-title">Hospitalisation — inpatient</h3>
+            <p class="ev-clause-text">All inpatient hospitalisation costs including room, nursing, surgeon fees, and medicine covered up to sum insured of ₹5,00,000 per year.</p>
+          </div>
+          <div class="ev-card-bottom">
+            <div class="ev-source">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Clause 3.1, Page 5
+            </div>
+            <button class="ev-action">View in doc
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </article>
+
+        <article class="ev-card" data-type="excluded">
+          <div class="ev-card-top">
+            <span class="ev-tag tag-excluded">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              Excluded
+            </span>
+            <h3 class="ev-clause-title">Cosmetic procedures</h3>
+            <p class="ev-clause-text">Any surgery or treatment primarily for cosmetic, aesthetic, or reconstructive purposes is permanently excluded, unless required due to an accident.</p>
+          </div>
+          <div class="ev-card-bottom">
+            <div class="ev-source">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Clause 7.4, Page 13
+            </div>
+            <button class="ev-action">View in doc
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </article>
+
+        <article class="ev-card" data-type="limit">
+          <div class="ev-card-top">
+            <span class="ev-tag tag-limit">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              Limit
+            </span>
+            <h3 class="ev-clause-title">Room rent sub-limit</h3>
+            <p class="ev-clause-text">Room rent is capped at 1% of sum insured per day (₹5,000). ICU/ICCU is capped at 2% (₹10,000). Exceeding this proportionally reduces all reimbursements.</p>
+          </div>
+          <div class="ev-card-bottom">
+            <div class="ev-source">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Clause 4.2, Page 7
+            </div>
+            <button class="ev-action">View in doc
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </article>
+
+        <article class="ev-card" data-type="condition">
+          <div class="ev-card-top">
+            <span class="ev-tag tag-condition">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Condition
+            </span>
+            <h3 class="ev-clause-title">Pre-existing disease waiting period</h3>
+            <p class="ev-clause-text">Declared pre-existing conditions are covered only after a continuous 3-year policy period. New diagnoses within 30 days of start are also excluded.</p>
+          </div>
+          <div class="ev-card-bottom">
+            <div class="ev-source">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Clause 6.1, Page 11
+            </div>
+            <button class="ev-action">View in doc
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </article>
+
+        <article class="ev-card" data-type="covered">
+          <div class="ev-card-top">
+            <span class="ev-tag tag-covered">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Covered
+            </span>
+            <h3 class="ev-clause-title">Daycare procedures</h3>
+            <p class="ev-clause-text">541 listed daycare procedures that require less than 24-hour hospitalisation are fully covered, including cataract surgery and chemotherapy sessions.</p>
+          </div>
+          <div class="ev-card-bottom">
+            <div class="ev-source">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Clause 3.4, Page 6
+            </div>
+            <button class="ev-action">View in doc
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </article>
+
+        <article class="ev-card" data-type="excluded">
+          <div class="ev-card-top">
+            <span class="ev-tag tag-excluded">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              Excluded
+            </span>
+            <h3 class="ev-clause-title">Self-inflicted injuries</h3>
+            <p class="ev-clause-text">Treatment for injuries arising from self-inflicted harm, attempted suicide, or any illegal activity are permanently excluded from all benefit claims.</p>
+          </div>
+          <div class="ev-card-bottom">
+            <div class="ev-source">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Clause 7.1, Page 12
+            </div>
+            <button class="ev-action">View in doc
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── POLICY COMPARISON ───────────── -->
+  <section class="compare-section" id="compare-section">
+    <div class="container">
+      <div class="section-label">Compare plans</div>
+      <h2 class="section-title">Policy comparison</h2>
+      <p class="section-sub" id="compareSub">Upload two policies and compare them side-by-side across every dimension.</p>
+
+      <div class="compare-table-wrap">
+        <table class="compare-table" role="table" aria-label="Policy comparison table">
+          <thead>
+            <tr id="compareTheadRow">
+              <th class="compare-th-label"></th>
+              <th class="compare-th featured">
+                <div class="compare-badge">Better value</div>
+                <div class="compare-insurer">Star Health</div>
+                <div class="compare-plan">Family Floater Plus</div>
+                <div class="compare-premium">₹12,400<span class="compare-premium-sub">/yr</span></div>
+              </th>
+              <th class="compare-th">
+                <div class="compare-insurer">HDFC ERGO</div>
+                <div class="compare-plan">Optima Restore</div>
+                <div class="compare-premium">₹15,200<span class="compare-premium-sub">/yr</span></div>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="compareTbody">
+            <tr>
+              <td class="compare-row-label">Annual premium</td>
+              <td class="compare-cell featured"><strong>₹12,400</strong></td>
+              <td class="compare-cell"><strong>₹15,200</strong></td>
+            </tr>
+            <tr>
+              <td class="compare-row-label">Sum insured</td>
+              <td class="compare-cell featured"><strong>₹5,00,000</strong></td>
+              <td class="compare-cell"><strong>₹5,00,000</strong></td>
+            </tr>
+            <tr>
+              <td class="compare-row-label">Room rent limit</td>
+              <td class="compare-cell featured">1% / day</td>
+              <td class="compare-cell compare-better">No limit</td>
+            </tr>
+            <tr>
+              <td class="compare-row-label">Daycare procedures</td>
+              <td class="compare-cell featured">541 procedures</td>
+              <td class="compare-cell compare-better">All procedures</td>
+            </tr>
+            <tr>
+              <td class="compare-row-label">No-claim bonus</td>
+              <td class="compare-cell featured">10% / yr</td>
+              <td class="compare-cell">50% restore</td>
+            </tr>
+            <tr>
+              <td class="compare-row-label">Maternity cover</td>
+              <td class="compare-cell featured">
+                <span class="compare-yes">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-label="Yes"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+              </td>
+              <td class="compare-cell">
+                <span class="compare-no">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-label="No"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td class="compare-row-label">Pre-existing wait</td>
+              <td class="compare-cell featured compare-better">3 years</td>
+              <td class="compare-cell">4 years</td>
+            </tr>
+            <tr>
+              <td class="compare-row-label">Cashless hospitals</td>
+              <td class="compare-cell featured compare-better"><strong>14,000+</strong></td>
+              <td class="compare-cell">10,000+</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="compare-actions">
+        <button class="compare-btn-outline" id="addPlanBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add another plan
+        </button>
+        <button class="compare-btn-primary" onclick="document.getElementById('chat-section').scrollIntoView({behavior:'smooth'})">
+          Get detailed AI analysis
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── UPCOMING ───────────── -->
+  <section class="upcoming-section">
+    <div class="container">
+      <div class="section-label upcoming-label">On the roadmap</div>
+      <h2 class="section-title upcoming-title">Upcoming features</h2>
+      <p class="section-sub upcoming-sub">What's coming next for BhashaPolicy.</p>
+      <div class="feat-grid">
+        <div class="feat-card">
+          <div class="feat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f5c97a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h3 class="feat-title">Chat with your policy</h3>
+          <p class="feat-sub">Ask anything about your document in natural language</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f5c97a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h3 class="feat-title">Evidence cards</h3>
+          <p class="feat-sub">Every insight pinned to the exact source clause</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f5c97a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="18"/><rect x="14" y="3" width="7" height="18"/></svg>
+          </div>
+          <h3 class="feat-title">Policy comparison</h3>
+          <p class="feat-sub">Compare two plans side-by-side across all coverage dimensions</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f5c97a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </div>
+          <h3 class="feat-title">Regional audio summaries</h3>
+          <p class="feat-sub">Listen in Hindi, Tamil, Telugu, Kannada, and more</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f5c97a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <h3 class="feat-title">Hidden exclusion alerts</h3>
+          <p class="feat-sub">Auto-flag unusual or risky exclusion clauses you might miss</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── FOOTER ───────────── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">Bhasha<span>Policy</span></div>
+      <p class="footer-copy">© 2026 BhashaPolicy. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
