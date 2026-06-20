@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engine Test UI</title>
+    <style>
+        body { font-family: system-ui, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; background: #121212; color: #e0e0e0; }
+        .box { border: 1px solid #333; padding: 20px; margin-bottom: 20px; border-radius: 8px; background: #1e1e1e; }
+        button { background: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #45a049; }
+        input[type="text"], input[type="file"] { width: 80%; padding: 10px; margin-right: 10px; background: #2d2d2d; border: 1px solid #444; color: white; }
+        pre { background: #000; padding: 15px; overflow-x: auto; border-radius: 4px; border: 1px solid #333; }
+    </style>
+</head>
+<body>
+
+    <h1>Backend Test Panel</h1>
+
+    <div class="box">
+        <h3>1. Upload Policy PDF</h3>
+        <input type="file" id="pdfFile" accept="application/pdf">
+        <button onclick="uploadFile()">Upload & Process</button>
+        <pre id="uploadResult">Upload status will appear here...</pre>
+    </div>
+
+    <div class="box">
+        <h3>2. Ask the Agents</h3>
+        <input type="text" id="queryInput" placeholder="e.g., Is knee replacement surgery covered?">
+        <button onclick="askAgent()">Ask</button>
+        <pre id="queryResult">Agent response will appear here...</pre>
+    </div>
+
+    <script>
+        async function uploadFile() {
+            const fileInput = document.getElementById('pdfFile');
+            const resultBox = document.getElementById('uploadResult');
+            
+            if (!fileInput.files[0]) {
+                resultBox.innerText = "Please select a file first.";
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            resultBox.innerText = "Processing RAG pipeline... (Check your terminal)";
+
+            try {
+                const response = await fetch('/upload', { method: 'POST', body: formData });
+                const data = await response.json();
+                resultBox.innerText = JSON.stringify(data, null, 2);
+            } catch (err) {
+                resultBox.innerText = "Error: " + err;
+            }
+        }
+
+        async function askAgent() {
+            const query = document.getElementById('queryInput').value;
+            const resultBox = document.getElementById('queryResult');
+
+            if (!query) {
+                resultBox.innerText = "Please enter a query.";
+                return;
+            }
+
+            resultBox.innerText = "Agents are thinking...";
+
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: query })
+                });
+                const data = await response.json();
+                resultBox.innerText = JSON.stringify(data, null, 2);
+            } catch (err) {
+                resultBox.innerText = "Error: " + err;
+            }
+        }
+    </script>
+</body>
+</html>

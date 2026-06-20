@@ -1,0 +1,57 @@
+import os
+import uuid
+from flask import jsonify
+from werkzeug.utils import secure_filename
+
+# --- Your RAG Pipeline Imports ---
+from rag.pdf_loader import extract_text_from_pdf
+from rag.chunker import chunk_text
+from rag.embeddings import create_vector_db
+
+UPLOAD_FOLDER = 'uploads'
+
+def process_upload(file):
+    """
+    Controller Logic: Secures the file, saves it locally, and kicks off the RAG ingestion.
+    """
+    try:
+        # 1. Secure and save the file
+        # filename = secure_filename(file.filename)
+        # filepath = os.path.join(UPLOAD_FOLDER, filename)
+
+        filename = secure_filename(file.filename)
+
+        unique_filename = (
+            f"{uuid.uuid4()}_{filename}"
+        )
+
+        filepath = os.path.join(
+            UPLOAD_FOLDER,
+            unique_filename
+        )
+        
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+        file.save(filepath)
+        
+        # ---------------------------------------------------------
+        # 2. The RAG Pipeline (Your Logic)
+        # ---------------------------------------------------------
+        print(f"Initiating RAG pipeline for {filename}...")
+        
+        documents = extract_text_from_pdf(filepath)
+        chunks = chunk_text(documents)
+        vectorstore = create_vector_db(chunks) # Persists to ChromaDB
+        
+        return jsonify({
+            'status': 'success',
+            'message': f'Policy document "{filename}" successfully processed and vectorized!',
+            # 'filepath': filepath
+            'filename' : 'filename'
+        }), 200
+        
+    except Exception as e:
+        print(f"Error during upload processing: {e}")
+        return jsonify({
+            'status': 'error',
+            'message': f'Failed to process upload: {str(e)}'
+        }), 500
