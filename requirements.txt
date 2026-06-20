@@ -1,0 +1,20 @@
+# Web Framework
+Flask==3.0.3
+Werkzeug==3.0.3
+
+# RAG & AI Orchestration (Exactly as specified in your notebook)
+langchain==0.2.17
+langchain-core==0.2.43
+langchain-community==0.2.19
+langchain-huggingface==0.0.3
+langchain-groq==0.1.10
+
+# Vector Database
+chromadb==1.5.9
+
+# Document Processing & OCR
+pypdf==4.2.0
+pdf2image==1.17.0
+pytesseract==0.3.10
+
+# Note: For pytesseract and pdf2image to work on your local machine, you will also need to have Tesseract-OCR and Poppler installed on your actual operating system, just like your notebook had !apt-get install -y tesseract-ocr poppler-utils

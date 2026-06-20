@@ -5,3 +5,13 @@ build/
 __pycache__/
 chroma_db/
 *.pdf
+
+# Python Environment
+backend/venv/
+**/__pycache__/
+*.pyc
+
+# Ignore the database inside the backend folder
+backend/vectorstore/
+# OS Files
+.DS_Store
