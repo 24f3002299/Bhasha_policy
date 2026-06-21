@@ -1,7 +1,8 @@
 import os
-from groq import Groq
+# from groq import Groq
 
-groq_client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+# groq_client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+from routes.llm_routes import call_ai_model
 
 def run_waiting_period_agent(user_query: str, context: str) -> str:
     """
@@ -58,13 +59,14 @@ Waiting periods are only one factor considered during claim review.
 """
 
     try:
-        response = groq_client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.0, # 0.0 because time limits are strict facts
-            max_tokens=300
-        )
-        return response.choices[0].message.content.strip()
+        # response = groq_client.chat.completions.create(
+        #     model="llama-3.3-70b-versatile",
+        #     messages=[{"role": "user", "content": prompt}],
+        #     temperature=0.0, # 0.0 because time limits are strict facts
+        #     max_tokens=300
+        # )
+        # return response.choices[0].message.content.strip()
+        return call_ai_model(prompt)
     except Exception as e:
         print(f"Waiting Period Agent Error: {e}")
         return "Waiting Period Status: ERROR\nReason: Agent failed to execute.\nEvidence: N/A"

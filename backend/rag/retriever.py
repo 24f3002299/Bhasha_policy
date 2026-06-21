@@ -43,16 +43,18 @@ Provide a concise list of the original query plus its broader parent categories 
         # # Combine them so the retriever searches for both the specific and broad terms
         # return f"{original_query} {expanded_terms}"
 
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        # model = genai.GenerativeModel('gemini-1.5-flash')
         
-        response = model.generate_content(
-            prompt,
-            generation_config=genai.types.GenerationConfig(
-                temperature=0.1, 
-                max_output_tokens=100
-            )
-        )
-        expanded_terms = response.text.strip()
+        # response = model.generate_content(
+        #     prompt,
+        #     generation_config=genai.types.GenerationConfig(
+        #         temperature=0.1, 
+        #         max_output_tokens=100
+        #     )
+        # )
+        from routes.llm_routes import call_ai_model
+        expanded_terms = call_ai_model(prompt)
+        # expanded_terms = response.text.strip()
         print(f"Original Query: {original_query}")
         print(f"Expanded Terms: {expanded_terms}")
         
