@@ -73,7 +73,7 @@
      data so you can preview and demo the full design right now.
   ------------------------------------------------- */
   const BACKEND_CONFIG = {
-    endpoint: '/api/analyze-policy', // <-- replace with the real backend URL
+    endpoint: 'https://bhasha-policy.onrender.com/upload', // <-- replace with the real backend URL
   };
 
   /* ---------- state ---------- */
