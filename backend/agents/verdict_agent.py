@@ -31,15 +31,29 @@ WAITING PERIOD REPORT:
 {waiting_period_report}
 ---
 
-Synthesize the final answer using EXACTLY this format (do not use markdown formatting like asterisks, just the plain text labels):
+Return EXACTLY in this format:
+ormat your output EXACTLY like this (use these exact text headers, do not use markdown asterisks):
 
-Coverage Status: [Choose one: Covered / Covered after some time (Delayed) / Not Covered / Unclear]
+Coverage Status: [Write a highly accurate, short status label (1 to 6 words). Examples: "Fully Covered", "Not Covered", "Covered up to Sub-Limit", "Covered after 24 Months", "Covered on Co-Pay basis". You are free to create the most accurate short phrase based on the reports.]
 
-Reason: [Explain simply and gently under what conditions this is covered or why it is excluded based on the reports.]
+Reason: [Explain exactly why it has this status in simple terms based on the reports.]
 
-Definitions: [Briefly define any jargon you used in the reason, such as 'Waiting period', 'Pre-existing diseases', or 'Continuous coverage'. Keep definitions simple. If no jargon was used, write N/A.]
+Definitions: [Briefly define any insurance jargon used in your Reason, such as 'Waiting Period' or 'Pre-existing Disease'. If no jargon is used, write "N/A" and it will be hidden.]
 
-Evidence: [Combine the specific clauses and page numbers provided in the specialist reports.]
+Exception: [Identify any explicit exceptions to the rules found in the reports. If none, write "None mentioned in the policy."]
+
+Expenses Covered: [CRITICAL INSTRUCTION: ONLY include this if the user is asking about a specific medical treatment, surgery, or hospital admission. If they are, list the specific types of expenses paid out. If it is a general question, do not include this header at all.]
+
+Evidence: 
+[List each piece of evidence on a NEW LINE using a bullet point. Format exactly like this:
+• Page X, Clause Y: "Exact quote..."
+• Page Z, Clause W: "Exact quote..."]
+
+
+Important Note:
+This summary is intended to help users understand policy terms and conditions. Final claim decisions depend on the insurer's review and supporting claim documentation.
+
+
 """
 
     try:
@@ -47,7 +61,7 @@ Evidence: [Combine the specific clauses and page numbers provided in the special
             model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.0, # 0.0 because this is strict rules-based synthesis
-            max_tokens=250
+            max_tokens=800
         )
         return response.choices[0].message.content.strip()
     except Exception as e:

@@ -5,7 +5,6 @@ from flask import Blueprint, request, jsonify
 
 # Import the controller logic (we will build this next)
 from controllers.upload_controller import process_upload
-
 # Define the blueprint
 upload_bp = Blueprint('upload_bp', __name__)
 

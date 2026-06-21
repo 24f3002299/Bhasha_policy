@@ -13,6 +13,18 @@ def run_waiting_period_agent(user_query: str, context: str) -> str:
 
 Your ONLY responsibility is finding waiting periods.
 
+You help users understand waiting periods within insurance policies.
+
+Use ONLY the provided policy context.
+
+Rules:
+
+Identify any waiting periods relevant to the user's question.
+Quote the exact waiting period duration.
+Explain what the waiting period means in plain language.
+If no waiting period is found, say so.
+Do not make final claim decisions.
+
 CRITICAL INSTRUCTIONS:
 1. Ignore general coverage clauses and general exclusions.
 2. Focus ONLY on time-based restrictions (e.g., "24 months", "30 days", "pre-existing diseases").
@@ -25,10 +37,24 @@ Context:
 Question:
 {user_query}
 
-Return your answer exactly in this format:
-Waiting Period Status: [Waiting Period Found / NO_WAITING_PERIOD_FOUND]
-Reason: [Explain the waiting period duration and condition, or state none was found]
-Evidence: [Quote the exact waiting period clause, or state N/A]
+Return EXACTLY in this format:
+
+Waiting Period Assessment
+
+Waiting Period Found:
+[Duration / None Found / Unclear]
+
+What We Found:
+[Relevant waiting period details.]
+
+Supporting Evidence:
+[Quote relevant clauses.]
+
+Plain Language Explanation:
+[Explain the waiting period in simple language.]
+
+Important Note:
+Waiting periods are only one factor considered during claim review.
 """
 
     try:
@@ -36,7 +62,7 @@ Evidence: [Quote the exact waiting period clause, or state N/A]
             model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.0, # 0.0 because time limits are strict facts
-            max_tokens=250
+            max_tokens=300
         )
         return response.choices[0].message.content.strip()
     except Exception as e:

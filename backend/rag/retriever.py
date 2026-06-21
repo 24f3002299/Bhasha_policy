@@ -69,8 +69,8 @@ def retrieve_relevant_context(user_query: str, k: int = 15) -> str:
     for doc in docs:
         # LangChain PDF loaders usually 0-index pages, so we add 1
         page_num = doc.metadata.get('page', 'Unknown')
-        if isinstance(page_num, int):
-            page_num += 1 
+        # if isinstance(page_num, int):
+        #     page_num += 1 
             
         # Stamp the page number right above the text chunk!
         chunk_text = f"[Source: Page {page_num}]\n{doc.page_content}"

@@ -217,22 +217,31 @@
 
     try {
       console.log("Sending PDF to backend for RAG processing...");
-      // 1. Hit your actual Flask backend to trigger chunking and ChromaDB
+      setApiStatus('⏳ Uploading and analyzing document... this takes a few seconds.', 'loading');
+      
       const res = await fetch('http://127.0.0.1:5000/upload', { 
         method: 'POST', 
         body: formData 
       });
       
       if (!res.ok) throw new Error('backend returned ' + res.status);
-      console.log("Vector DB successfully populated!");
+      
+      const responseData = await res.json();
+      console.log("Analysis Complete:", responseData);
+      
+      // Use the REAL data from the backend Analyze Agent, not the mock data!
+      return normalizeResult(responseData.analysis, file, false);
 
     } catch (networkErr) {
-      console.warn('Backend upload failed. Is Flask running?', networkErr);
+      console.warn('Backend upload failed.', networkErr);
+      setApiStatus('⚠ Upload failed. Is the Flask server running?', 'error');
+      throw networkErr;
     }
+  }
 
     // 2. Return her mock data so the beautiful UI dashboards still populate instantly
-    return generateMockResult(file, 0);
-  }
+  //   return generateMockResult(file, 0);
+  // }
 
   function normalizeResult(raw, file, isMock) {
     const typeToBadge = { 'Health': 'badge-health', 'Term Life': 'badge-term', 'Motor': 'badge-motor' };
@@ -252,7 +261,7 @@
       compareMetrics: raw.compareMetrics && typeof raw.compareMetrics === 'object' ? raw.compareMetrics : {},
     };
   }
-
+// COMPARISONS!!!!!!
   /* ---------- demo data (used until the real backend is connected) ---------- */
   const MOCK_TEMPLATES = [
     {
@@ -327,12 +336,8 @@
     state.policies = results;
     state.activeIndex = 0;
 
-    const anyMock = results.some(r => r.isMock);
-    if (anyMock) {
-      setApiStatus('✓ Analysis complete. Showing demo data — connect BACKEND_CONFIG.endpoint in script.js to your friend\'s real API to replace this with live results.', 'loading');
-    } else {
-      setApiStatus('✓ Analysis complete — scroll down to explore.', 'success');
-    }
+    // We successfully chunked and stored the PDF in ChromaDB!
+    setApiStatus('✓ Document vectorized and ready for analysis. Scroll down to chat.', 'success');
 
     renderSidebar();
     renderActivePolicy();
@@ -436,9 +441,10 @@
         '<div class="ev-card-bottom">' +
           '<div class="ev-source">' +
             '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' +
-            escapeHtml(c.clause || 'Clause —') + ', Page ' + escapeHtml(String(c.page || '—')) +
+            // FIX: This forces it to read the dynamic data from the AI
+            escapeHtml(c.clause || 'General') + ', Page ' + escapeHtml(String(c.page || '—')) +
           '</div>' +
-          '<button class="ev-action">View in doc' +
+          '<button class="ev-action view-doc-btn">View in doc' +
             '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
           '</button>' +
         '</div>';
@@ -558,13 +564,20 @@
       typingEl.remove();
 
       if (data.status === 'success') {
-        // 4. Format the new Policy Explainer output for the UI
-        // We use regex to automatically bold your new section headers!
-        let formattedText = data.final_verdict
-            .replace(/Coverage Status:/g, '<br><strong style="color: #800046;">Coverage Status:</strong>')
-            .replace(/Reason:/g, '<br><br><strong style="color: #800046;">Reason:</strong>')
-            .replace(/Definitions:/g, '<br><br><strong style="color: #800046;">Definitions:</strong>')
-            .replace(/Evidence:/g, '<br><br><strong style="color: #800046;">Evidence:</strong>');
+        // 1. First, convert all invisible LLM line breaks into HTML line breaks!
+        let formattedText = data.final_verdict.replace(/\n/g, '<br>');
+        
+        // 2. Then, apply your beautiful maroon bolding to the headers
+        formattedText = formattedText
+            .replace(/Coverage Status:/g, '<strong style="color: #800046;">Coverage Status:</strong>')
+            .replace(/Reason:/g, '<strong style="color: #800046;">Reason:</strong>')
+            .replace(/Definitions:/g, '<strong style="color: #800046;">Definitions:</strong>')
+            .replace(/Exception:/g, '<strong style="color: #800046;">Exception:</strong>')
+            .replace(/Expenses Covered:/g, '<strong style="color: #800046;">Expenses Covered:</strong>')
+            .replace(/Evidence:/g, '<strong style="color: #800046;">Evidence:</strong>');
+            
+        // 3. Clean up the UI by automatically hiding the Definitions section if the AI says N/A
+        formattedText = formattedText.replace(/<strong style="color: #800046;">Definitions:<\/strong> N\/A<br>/g, '');
             
         appendMessage(formattedText, 'bot');
       } else {
@@ -662,3 +675,33 @@
     if (el) observer.observe(el);
   });
 })();
+
+  /* ══════════════════════════════════════════
+   7. VIEW IN DOC (AUTO-CHAT) FEATURE
+   ══════════════════════════════════════════ */
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.view-doc-btn');
+  if (!btn) return;
+
+  // 1. Get the specific clause text from the card
+  const cardElement = btn.closest('.ev-card');
+  const clauseText = cardElement.querySelector('.ev-clause-title').innerText;
+  const clauseSource = cardElement.querySelector('.ev-source').innerText;
+
+  // 2. Find the chat input
+  const chatInputEl = document.getElementById('chatInput');
+  const sendBtnEl = document.getElementById('sendBtn');
+
+  if (chatInputEl && sendBtnEl) {
+    // 3. Auto-fill the chat with a smart question
+    chatInputEl.value = `Tell me more about ${clauseText} (${clauseSource}).`;
+    
+    // 4. Scroll to chat smoothly (THIS IS THE LINE THAT GOT CUT OFF!)
+    document.getElementById('chat-section').scrollIntoView({ behavior: 'smooth' });
+    
+    // 5. Automatically click the send button after a tiny delay
+    setTimeout(() => {
+      sendBtnEl.click();
+    }, 400);
+  }
+});
