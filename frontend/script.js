@@ -554,7 +554,7 @@
 
     try {
       // 3. Send query to your multi-agent backend
-      const res = await fetch('https://bhasha-policy-api.onrender.com/ask', {
+      const res = await fetch('https://bhasha-policy.onrender.com/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: text })
