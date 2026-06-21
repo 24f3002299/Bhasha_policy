@@ -681,5 +681,3 @@
     if (el) observer.observe(el);
   });
 })();
-
-  

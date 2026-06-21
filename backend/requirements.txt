@@ -139,3 +139,4 @@ websockets==16.0
 Werkzeug==3.0.3
 yarl==1.24.2
 gunicorn
+langchain-google-genai
