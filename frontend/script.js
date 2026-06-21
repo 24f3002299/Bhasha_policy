@@ -219,7 +219,7 @@
       console.log("Sending PDF to backend for RAG processing...");
       setApiStatus('⏳ Uploading and analyzing document... this takes a few seconds.', 'loading');
       
-      const res = await fetch('https://bhasha-policy-api.onrender.com/upload', { 
+      const res = await fetch('https://bhasha-policy.onrender.com/upload', { 
         method: 'POST', 
         body: formData 
       });
