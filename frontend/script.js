@@ -219,7 +219,7 @@
       console.log("Sending PDF to backend for RAG processing...");
       setApiStatus('⏳ Uploading and analyzing document... this takes a few seconds.', 'loading');
       
-      const res = await fetch('http://127.0.0.1:5000/upload', { 
+      const res = await fetch('https://bhasha-policy-api.onrender.com/upload', { 
         method: 'POST', 
         body: formData 
       });
@@ -554,7 +554,7 @@
 
     try {
       // 3. Send query to your multi-agent backend
-      const res = await fetch('http://127.0.0.1:5000/ask', {
+      const res = await fetch('https://bhasha-policy-api.onrender.com/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: text })
