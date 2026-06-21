@@ -50,16 +50,20 @@ REQUIRED JSON FORMAT:
         # )
         # return json.loads(response.choices[0].message.content)
 
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        # model = genai.GenerativeModel('gemini-1.5-flash')
         
-        response = model.generate_content(
-            prompt,
-            generation_config=genai.types.GenerationConfig(
-                temperature=0.1, 
-                response_mime_type="application/json" # Forces Gemini to output pure JSON!
-            )
-        )
-        return json.loads(response.text.strip())
+        # response = model.generate_content(
+        #     prompt,
+        #     generation_config=genai.types.GenerationConfig(
+        #         temperature=0.1, 
+        #         response_mime_type="application/json" # Forces Gemini to output pure JSON!
+        #     )
+        # )
+        # return json.loads(response.text.strip())
+
+        from routes.llm_routes import call_ai_model
+        response_text = call_ai_model(prompt, json_mode=True)
+        return json.loads(response_text)
 
 
     except Exception as e:

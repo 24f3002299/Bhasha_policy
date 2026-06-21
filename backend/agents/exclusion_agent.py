@@ -99,20 +99,9 @@ This assessment highlights policy exclusions for informational purposes only. Fi
         # )
         # return response.choices[0].message.content.strip()
 
-        # 1. Initialize the model 
-        model = genai.GenerativeModel('gemini-1.5-flash') # or 'gemini-2.0-flash' if available in your SDK
-        
-        # 2. Generate the response with the exact same strict parameters
-        response = model.generate_content(
-            prompt,
-            generation_config=genai.types.GenerationConfig(
-                temperature=0.0,        # Keeps the output strict and factual
-                max_output_tokens=800,  # Replaces max_tokens
-            )
-        )
-        
+        from routes.llm_routes import call_ai_model
+        return call_ai_model(prompt)
         # 3. Extract and return the text
-        return response.text.strip()
 
     except Exception as e:
         print(f"Exclusion Agent Error: {e}")
