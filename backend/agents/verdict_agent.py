@@ -1,7 +1,7 @@
 import os
 # from groq import Groq
 # import google.generativeai as genai
-from llm_router import call_ai_model
+from routes.llm_routes import call_ai_model
 
 # groq_client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 # genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
