@@ -1,9 +1,13 @@
 import os
-from groq import Groq
+# from groq import Groq
+
+import google.generativeai as genai
+
+# groq_client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 # Initialize the Groq client
 # (Make sure your GROQ_API_KEY is still set in your terminal)
-groq_client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 def run_coverage_agent(user_query: str, context: str) -> str:
     """
@@ -127,13 +131,28 @@ This assessment explains policy language and does not guarantee claim approval o
 """
 
     try:
-        response = groq_client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.1, # Low temperature for factual consistency
-            max_tokens=400
+        # response = groq_client.chat.completions.create(
+        #     model="llama-3.3-70b-versatile",
+        #     messages=[{"role": "user", "content": prompt}],
+        #     temperature=0.1, # Low temperature for factual consistency
+        #     max_tokens=400
+        # )
+        # return response.choices[0].message.content.strip()
+
+    # 1. Initialize the model 
+        model = genai.GenerativeModel('gemini-1.5-flash') # or 'gemini-2.0-flash' if available in your SDK
+        
+        # 2. Generate the response with the exact same strict parameters
+        response = model.generate_content(
+            prompt,
+            generation_config=genai.types.GenerationConfig(
+                temperature=0.0,        # Keeps the output strict and factual
+                max_output_tokens=800,  # Replaces max_tokens
+            )
         )
-        return response.choices[0].message.content.strip()
+        
+        # 3. Extract and return the text
+        return response.text.strip()
     except Exception as e:
         print(f"Coverage Agent Error: {e}")
         return "Coverage Status: ERROR\nReason: Agent failed to execute.\nEvidence: N/A"

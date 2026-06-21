@@ -1,12 +1,15 @@
 import os
-from groq import Groq
+# from groq import Groq
+
+import google.generativeai as genai
 from langchain_community.vectorstores import Chroma
 from rag.embeddings import get_embedding_model, DB_PATH
 import chromadb
 
 # Initialize the Groq client for fast expansion
 # Make sure your GROQ_API_KEY environment variable is set
-groq_client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+# groq_client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 def expand_query(original_query: str) -> str:
     """
@@ -27,17 +30,32 @@ Provide a concise list of the original query plus its broader parent categories 
 """
 
     try:
-        response = groq_client.chat.completions.create(
-            model="llama3-3-70b-versatile",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.1, # Keep it deterministic and focused
-            max_tokens=100
+        # response = groq_client.chat.completions.create(
+        #     model="llama3-3-70b-versatile",
+        #     messages=[{"role": "user", "content": prompt}],
+        #     temperature=0.1, # Keep it deterministic and focused
+        #     max_tokens=100
+        # )
+        # expanded_terms = response.choices[0].message.content.strip()
+        # print(f"Original Query: {original_query}")
+        # print(f"Expanded Terms: {expanded_terms}")
+        
+        # # Combine them so the retriever searches for both the specific and broad terms
+        # return f"{original_query} {expanded_terms}"
+
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        
+        response = model.generate_content(
+            prompt,
+            generation_config=genai.types.GenerationConfig(
+                temperature=0.1, 
+                max_output_tokens=100
+            )
         )
-        expanded_terms = response.choices[0].message.content.strip()
+        expanded_terms = response.text.strip()
         print(f"Original Query: {original_query}")
         print(f"Expanded Terms: {expanded_terms}")
         
-        # Combine them so the retriever searches for both the specific and broad terms
         return f"{original_query} {expanded_terms}"
     except Exception as e:
         print(f"Query expansion failed: {e}. Falling back to original query.")

@@ -1,7 +1,10 @@
 import os
-from groq import Groq
+# from groq import Groq
+# import google.generativeai as genai
+from llm_router import call_ai_model
 
-groq_client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+# groq_client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+# genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 def run_verdict_agent(coverage_report: str, exclusion_report: str, waiting_period_report: str) -> str:
     """
@@ -32,11 +35,11 @@ WAITING PERIOD REPORT:
 ---
 
 Return EXACTLY in this format:
-ormat your output EXACTLY like this (use these exact text headers, do not use markdown asterisks):
+Format your output EXACTLY like this (use these exact text headers, do not use markdown asterisks):
 
-Coverage Status: [Write a highly accurate, short status label (1 to 6 words). Examples: "Fully Covered", "Not Covered", "Covered up to Sub-Limit", "Covered after 24 Months", "Covered on Co-Pay basis". You are free to create the most accurate short phrase based on the reports.]
+Coverage Status: [Write a highly accurate, short status label (1 to 6 words). Examples: "Fully Covered", "Not Covered", "Covered up to Sub-Limit", "Covered after 24 Months", "Covered on Co-Pay basis". You are free to create the most accurate short phrase based on the reports. CRITICAL: If the user is asking a general process question (like 'How to file a claim' or 'What is the bonus'), ignore medical labels and write exactly: "General Policy Information".]
 
-Reason: [Explain exactly why it has this status in simple terms based on the reports.]
+Reason: [Explain exactly why it has this status in simple terms based on the reports. If it is a medical question, explain why it has this status. If it is a general process question, clearly explain the rules, timelines, or processes found in the reports.]
 
 Definitions: [Briefly define any insurance jargon used in your Reason, such as 'Waiting Period' or 'Pre-existing Disease'. If no jargon is used, write "N/A" and it will be hidden.]
 
@@ -57,13 +60,28 @@ This summary is intended to help users understand policy terms and conditions. F
 """
 
     try:
-        response = groq_client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.0, # 0.0 because this is strict rules-based synthesis
-            max_tokens=800
-        )
-        return response.choices[0].message.content.strip()
+        # response = groq_client.chat.completions.create(
+        #     model="llama-3.3-70b-versatile",
+        #     messages=[{"role": "user", "content": prompt}],
+        #     temperature=0.0, # 0.0 because this is strict rules-based synthesis
+        #     max_tokens=800
+        # )
+        # return response.choices[0].message.content.strip()
+
+        # model = genai.GenerativeModel('gemini-2.5-flash')
+        
+        # Generation config maps to your old settings (temperature 0.0 for strict facts)
+        # response = model.generate_content(
+        #     prompt,
+        #     generation_config=genai.types.GenerationConfig(
+        #         temperature=0.0,
+        #         max_tokens=800
+        #     )
+        # )
+        # return response.text.strip()
+
+        return call_ai_model(prompt)
+
     except Exception as e:
         print(f"Verdict Agent Error: {e}")
         return "Final Verdict: ERROR\nSynthesis: Agent failed to execute."

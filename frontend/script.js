@@ -586,7 +586,13 @@
 
     } catch (err) {
       typingEl.remove();
-      appendMessage("Failed to reach the AI backend. Is the Flask server running?", 'bot');
+      
+      // Check if it's likely a token/rate-limit error based on the response
+      if (err.message.includes('429') || err.message.includes('limit')) {
+        appendMessage("<strong>System Note:</strong> We’ve hit the current token limit for our AI model's free-tier usage. Please wait for some moment for the quota to reset.", 'bot');
+      } else {
+        appendMessage("<strong>System Note:</strong> The AI backend is temporarily unreachable. Please ensure the server is active.", 'bot');
+      }
     }
   }
 
@@ -676,32 +682,4 @@
   });
 })();
 
-  /* ══════════════════════════════════════════
-   7. VIEW IN DOC (AUTO-CHAT) FEATURE
-   ══════════════════════════════════════════ */
-document.addEventListener('click', function(e) {
-  const btn = e.target.closest('.view-doc-btn');
-  if (!btn) return;
-
-  // 1. Get the specific clause text from the card
-  const cardElement = btn.closest('.ev-card');
-  const clauseText = cardElement.querySelector('.ev-clause-title').innerText;
-  const clauseSource = cardElement.querySelector('.ev-source').innerText;
-
-  // 2. Find the chat input
-  const chatInputEl = document.getElementById('chatInput');
-  const sendBtnEl = document.getElementById('sendBtn');
-
-  if (chatInputEl && sendBtnEl) {
-    // 3. Auto-fill the chat with a smart question
-    chatInputEl.value = `Tell me more about ${clauseText} (${clauseSource}).`;
-    
-    // 4. Scroll to chat smoothly (THIS IS THE LINE THAT GOT CUT OFF!)
-    document.getElementById('chat-section').scrollIntoView({ behavior: 'smooth' });
-    
-    // 5. Automatically click the send button after a tiny delay
-    setTimeout(() => {
-      sendBtnEl.click();
-    }, 400);
-  }
-});
+  
