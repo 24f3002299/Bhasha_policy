@@ -10,3 +10,9 @@ backend/vectorstore/
 
 # Ignore environment variables
 .env
+
+# Uploaded files
+uploads/
+
+# VS Code
+.vscode/
