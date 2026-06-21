@@ -10,7 +10,7 @@ def chunk_text(documents: list[Document]) -> list[Document]:
     
     # Using the exact optimal parameters from your notebook
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
+        chunk_size=1500,
         chunk_overlap=200
     )
     

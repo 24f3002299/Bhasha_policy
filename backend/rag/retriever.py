@@ -64,5 +64,18 @@ def retrieve_relevant_context(user_query: str, k: int = 15) -> str:
     docs = vectorstore.similarity_search(search_query, k=k)
     
     # 4. Combine the retrieved document text chunks into a single block
-    context = "\n\n".join([doc.page_content for doc in docs])
+    # Upgrade: Inject metadata (Page Numbers) directly into the prompt context
+    context_chunks = []
+    for doc in docs:
+        # LangChain PDF loaders usually 0-index pages, so we add 1
+        page_num = doc.metadata.get('page', 'Unknown')
+        if isinstance(page_num, int):
+            page_num += 1 
+            
+        # Stamp the page number right above the text chunk!
+        chunk_text = f"[Source: Page {page_num}]\n{doc.page_content}"
+        context_chunks.append(chunk_text)
+        
+    context = "\n\n---\n\n".join(context_chunks)
+    
     return context

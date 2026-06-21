@@ -2,24 +2,30 @@
 # Register Blueprints
 # Run Server
 
+import os
 from flask import Flask, render_template
+from flask_cors import CORS
 from routes.upload_route import upload_bp
-# We will create query_routes.py soon, but let's keep it commented out 
-# until the file exists so your server doesn't crash on startup.
 from routes.query_routes import query_bp
 
 def create_app():
-    app = Flask(__name__)
+    # 1. Point Flask to the new frontend folder (which is one level up and inside 'frontend')
+    frontend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'frontend'))
     
-    # Configure shared upload settings if needed
+    app = Flask(__name__, 
+                template_folder=frontend_dir,  # Where to find index.html
+                static_folder=frontend_dir,    # Where to find style.css and script.js
+                static_url_path='')            # Serve them at the root URL
+    
+    CORS(app)
+    
     app.config['UPLOAD_FOLDER'] = 'uploads'
-    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
+    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
     
-    # Register Blueprints
     app.register_blueprint(upload_bp)
     app.register_blueprint(query_bp)
-
-    # --- THE FIX: Serve the Frontend UI ---
+    
+    # 2. Serve the real website!
     @app.route('/')
     def index():
         return render_template('index.html')
@@ -29,8 +35,4 @@ def create_app():
 app = create_app()
 
 if __name__ == "__main__":
-    app.run(
-        host="0.0.0.0",
-        port=5000,
-        debug=True
-    )
+    app.run(host="0.0.0.0", port=5000, debug=True)
