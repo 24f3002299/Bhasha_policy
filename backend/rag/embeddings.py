@@ -1,6 +1,7 @@
 import os
 import shutil
 # from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEndpointEmbeddings
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import Chroma
 import chromadb
@@ -10,10 +11,15 @@ DB_PATH = "vectorstore/insurance_db"
 
 def get_embedding_model():
     """Initializes and returns the HuggingFace embedding model."""
-    print("Loading Lightweight Google Embedding Model...")
+    print("Loading HuggingFace Cloud Embeddings (Zero RAM footprint!)...")
     # Using the exact model from your notebook's vector DB creation step
     # return HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-    return GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-2")
+    # return GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-2")
+    return HuggingFaceEndpointEmbeddings(
+        model="sentence-transformers/all-MiniLM-L6-v2",
+        task="feature-extraction",
+        huggingfacehub_api_token=os.environ.get("HF_TOKEN")
+    )
 
 
 def create_vector_db(clean_chunks):

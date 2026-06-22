@@ -1,3 +1,4 @@
+import concurrent.futures
 from flask import jsonify
 
 # ---------------------------------------------------------
@@ -28,15 +29,30 @@ def process_query(user_query: str):
         # ---------------------------------------------------------
         
         # Step 1: Specialist Agents Analyze the Query in Parallel (Conceptually)
-        print("2. Running Coverage Agent analysis...")
-        coverage_report = run_coverage_agent(user_query, context)
-        print("3. Running Exclusion Agent analysis...")
-        exclusion_report = run_exclusion_agent(user_query, context)
-        print("4. Running Waiting Period Agent analysis...")
-        waiting_period_report = run_waiting_period_agent(user_query, context)
+        # print("2. Running Coverage Agent analysis...")
+        # coverage_report = run_coverage_agent(user_query, context)
+        # print("3. Running Exclusion Agent analysis...")
+        # exclusion_report = run_exclusion_agent(user_query, context)
+        # print("4. Running Waiting Period Agent analysis...")
+        # waiting_period_report = run_waiting_period_agent(user_query, context)
+
+        print("2. Running Specialist Agents concurrently...")
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            # Submit tasks to the thread pool
+            future_coverage = executor.submit(run_coverage_agent, user_query, context)
+            future_exclusion = executor.submit(run_exclusion_agent, user_query, context)
+            future_waiting = executor.submit(run_waiting_period_agent, user_query, context)
+            
+            # Gathering results as they complete
+            coverage_report = future_coverage.result()
+            exclusion_report = future_exclusion.result()
+            waiting_period_report = future_waiting.result()
 
         print("5. Generating Final Verdict...")
         verdict_report = run_verdict_agent(coverage_report, exclusion_report, waiting_period_report)
+
+
+
         
         # eligibility_report = run_eligibility_agent(user_query)
         
