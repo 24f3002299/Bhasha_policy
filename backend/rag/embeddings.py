@@ -31,9 +31,14 @@ def create_vector_db(clean_chunks):
     
     # 1. Clear old database to prevent overlapping data during testing
     
-    # if os.path.exists(DB_PATH):
-    #     print("Removing old database...")
-    #     shutil.rmtree(DB_PATH)
+    if os.path.exists(DB_PATH):
+        print("Removing old database...")
+        try:
+            shutil.rmtree(DB_PATH)
+        except Exception as e:
+            print(f"Database folder busy or locked: {e}. Proceeding...")
+            
+    # Ensure the directory structure exists
         
     # Ensure the directory structure exists
     os.makedirs(DB_PATH, exist_ok=True)
