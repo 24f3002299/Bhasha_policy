@@ -207,7 +207,10 @@
       return await callBackend(file);
     } catch (err) {
       console.warn('Backend not reachable yet, showing demo data instead:', err.message);
-      return generateMockResult(file, indexHint);
+      alert("Upload Failed! Check Render Logs. Error: " + err.message);
+      // return generateMockResult(file, indexHint);
+      throw err;
+      // return generateMockResult(file, indexHint);
     }
   }
 
