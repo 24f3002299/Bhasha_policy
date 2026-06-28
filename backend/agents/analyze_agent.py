@@ -7,7 +7,7 @@ import google.generativeai as genai
 # groq_client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
-def run_analyze_agent(document_text: str) -> dict:
+def run_analyze_agent(document_text: str, filename_hint: str = "") -> dict:
     """
     Scans the beginning of the document to extract metadata and generate initial evidence cards.
     """
