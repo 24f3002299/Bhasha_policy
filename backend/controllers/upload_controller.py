@@ -41,7 +41,13 @@ def process_upload(file):
         sample_text = "\n".join([chunk.page_content for chunk in chunks[:5]])
         
         # Run the agent to get the JSON dictionary
-        ui_data = run_analyze_agent(sample_text)
+        # ui_data = run_analyze_agent(sample_text)
+
+        # Grab the text from the first 5 chunks (plenty of info for summary & evidence)
+        sample_text = "\n".join([chunk.page_content for chunk in chunks[:5]])
+        
+        # Run the agent to get the JSON dictionary (PASS THE FILENAME HERE)
+        ui_data = run_analyze_agent(sample_text, filename_hint=filename)
         
         return jsonify({
             'status': 'success',

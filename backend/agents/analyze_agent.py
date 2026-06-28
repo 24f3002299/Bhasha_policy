@@ -17,6 +17,11 @@ def run_analyze_agent(document_text: str) -> dict:
 Analyze the following extracted text from an insurance policy document.
 Return EXACTLY a valid JSON object. Do not output any conversational text or markdown formatting outside the JSON block.
 
+CRITICAL RULES FOR METADATA EXTRACTION:
+1. INSURER: Look for companies like ICICI Lombard, HDFC Ergo, Star Health, Max Life, etc. 
+2. FALLBACK HINT: If the text does not explicitly contain the insurer's name, analyze the filename hint provided here: "{filename_hint}". Deduce the insurer or policy name logically from this filename string rather than returning "Not specified".
+3. PREMIUM & SUM INSURED: Search for terms like "Premium Assured", "Total Premium", "Gross Premium", "Sum Insured", "Sum Assured", or "Limit of Indemnity".
+
 TEXT TO ANALYZE:
 {document_text[:6000]}  # We only need the first ~6000 characters to find this info
 

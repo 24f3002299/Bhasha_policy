@@ -580,9 +580,19 @@
         formattedText = formattedText.replace(/<strong style="color: #800046;">Definitions:<\/strong> N\/A<br>/g, '');
             
         appendMessage(formattedText, 'bot');
-      } else {
+      }
+      
+      if (data.evidenceCards && data.evidenceCards.length > 0) {
+            renderEvidenceCards(data.evidenceCards);
+            // Automatically scroll down slightly so the user sees them update
+            document.getElementById('evidence-section').scrollIntoView({behavior: 'smooth', block: 'nearest'});
+        }
+
+      else {
         appendMessage("Sorry, the AI agents encountered an error.", 'bot');
       }
+
+
 
     } catch (err) {
       typingEl.remove();

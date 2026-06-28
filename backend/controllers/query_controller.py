@@ -51,9 +51,20 @@ def process_query(user_query: str):
         print("5. Generating Final Verdict...")
         verdict_report = run_verdict_agent(coverage_report, exclusion_report, waiting_period_report)
 
+        dynamic_cards = []
+        if context:
+            # Split the context chunks retrieved from ChromaDB
+            chunks = context.split("\n\n")[:4] # Take up to 4 relevant chunks
+            for i, chunk in enumerate(chunks):
+                if len(chunk.strip()) > 15:
+                    dynamic_cards.append({
+                        "type": "covered" if "cover" in chunk.lower() else "condition",
+                        "title": f"Retrieved Reference {i+1}",
+                        "text": chunk.strip()[:150] + "...", # Show a snippet
+                        "clause": "Semantic Match",
+                        "page": "AI Retrieved"
+                    })
 
-
-        
         # eligibility_report = run_eligibility_agent(user_query)
         
         # Step 2: The Verdict Agent Synthesizes the Reports
@@ -95,7 +106,8 @@ def process_query(user_query: str):
                 'coverage': coverage_report,
                 'exclusions': exclusion_report,
                 'waiting_periods': waiting_period_report
-            }
+            },
+            'evidenceCards': dynamic_cards  # <-- Send the dynamic cards to the frontend!
         }), 200
 
     except Exception as e:
